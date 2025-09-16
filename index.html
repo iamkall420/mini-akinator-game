@@ -1,1 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tagdi Akinator Game</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(270deg, #ff0080, #7928ca, #2af598, #ff8c00);
+  background-size: 800% 800%;
+  animation: gradientShift 15s ease infinite;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  text-align: center;
+}
+@keyframes gradientShift {
+  0% { background-position:0% 50%; }
+  50% { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+h1 { font-size: 2.5rem; margin-bottom: 20px; text-shadow: 2px 2px #000; }
+#question { font-size: 1.5rem; margin-bottom: 20px; }
+button {
+  padding: 10px 25px;
+  margin: 5px;
+  font-size: 1.2rem;
+  border: 2px solid #0ff;
+  border-radius: 10px;
+  background: none;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+  transition: 0.2s;
+}
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 40px #0ff, 0 0 80px #0ff;
+}
+</style>
+</head>
+<body>
+
+<h1>🎮 Tagdi Akinator Game</h1>
+<div id="question">Think of a character or animal, then click Start!</div>
+<div id="answers">
+  <button onclick="startGame()">Start</button>
+</div>
+
+<audio id="bgMusic" autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+// Game data
+const questions = [
+  { q:"Is it a human?", yes:1, no:2 },
+  { q:"Is it male?", yes:3, no:4 },
+  { q:"Is it an animal?", yes:5, no:6 },
+  { q:"Is it Elon Musk?", yes:null, no:null },
+  { q:"Is it Oprah Winfrey?", yes:null, no:null },
+  { q:"Is it a cat?", yes:null, no:null },
+  { q:"Is it a robot?", yes:null, no:null }
+];
+
+let current = null;
+
+function startGame(){
+  current = 0;
+  showQuestion();
+}
+
+function showQuestion(){
+  if(current===null){
+    document.getElementById("question").innerText = "Game Over!";
+    document.getElementById("answers").innerHTML = "";
+    return;
+  }
+  const qObj = questions[current];
+  if(qObj.yes===null && qObj.no===null){
+    document.getElementById("question").innerText = "Is it "+qObj.q+"?";
+    document.getElementById("answers").innerHTML = '<button onclick="answer(true)">Yes</button><button onclick="answer(false)">No</button>';
+  } else {
+    document.getElementById("question").innerText = qObj.q;
+    document.getElementById("answers").innerHTML = '<button onclick="answer(true)">Yes</button><button onclick="answer(false)">No</button>';
+  }
+}
+
+function answer(ans){
+  const qObj = questions[current];
+  if(ans){
+    if(qObj.yes===null){
+      document.getElementById("question").innerText = "I guessed it! 🎯";
+      document.getElementById("answers").innerHTML = '<button onclick="startGame()">Play Again</button>';
+    } else {
+      current = qObj.yes;
+      showQuestion();
+    }
+  } else {
+    if(qObj.no===null){
+      document.getElementById("question").innerText = "I give up! 😅";
+      document.getElementById("answers").innerHTML = '<button onclick="startGame()">Try Again</button>';
+    } else {
+      current = qObj.no;
+      showQuestion();
+    }
+  }
+}
+</script>
+
+</body>
+</html>
 
